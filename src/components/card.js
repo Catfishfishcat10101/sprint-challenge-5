@@ -1,4 +1,40 @@
+import axios from'axios'
+import { articles } from '../mocks/data';
 const Card = (article) => {
+  console.log(article)
+  const cardWrapper = document.createElement('div');
+    cardWrapper.classList.add('card');
+
+const Hline = document.createElement('div');
+const authorWrapper = document.createElement('div');
+const imgContainer = document.createElement('div');
+const imgAuthor = document.createElement('img');
+const authorSpan = document.createElement('span');
+
+Hline.classList.add('headline');
+console.log(Hline)
+authorWrapper.classList.add('author');
+imgContainer.classList.add('img-container')
+
+cardWrapper.appendChild(Hline);
+cardWrapper.appendChild(authorWrapper);
+authorWrapper.appendChild(imgContainer);
+authorWrapper.appendChild(authorSpan);
+imgContainer.appendChild(imgAuthor);
+
+Hline.textContent = article.headline
+imgAuthor.src = article.authorPhoto
+authorSpan.textContent = article.authorName
+
+cardWrapper.addEventListener('click', () => {
+  console.log(Hline)
+})
+return cardWrapper
+}
+
+
+  
+
   // TASK 5
   // ---------------------
   // Implement this function, which should return the markup you see below.
@@ -17,7 +53,7 @@ const Card = (article) => {
   //   </div>
   // </div>
   //
-}
+
 
 const cardAppender = (selector) => {
   // TASK 6
@@ -28,6 +64,20 @@ const cardAppender = (selector) => {
   // Create a card from each and every article object in the response, using the Card component.
   // Append each card to the element in the DOM that matches the selector passed to the function.
   //
+  axios.get('http://localhost:5001/api/articles')
+  .then(res => {
+    const cardSelector = document.querySelector(selector);
+    const objkeys = Object.keys(res.data.articles)
+    for(let i = 0; i < objkeys.length; i++) {
+      res.data.articles[objkeys[i]].forEach(info => {
+        cardSelector.appendChild(Card(info))
+        
+      });
+    }
+  })
+  .catch(err => {
+    debugger
+  })
 }
 
 export { Card, cardAppender }
